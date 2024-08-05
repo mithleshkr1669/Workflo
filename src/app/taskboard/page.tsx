@@ -117,7 +117,7 @@ const Taskboard: React.FC = () => {
           </div>
           <div className=" w-[75%]">
 
-            <Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
               <p>{data}</p>
 
             </Suspense>
