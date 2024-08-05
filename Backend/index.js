@@ -8,6 +8,8 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser"
 import { Task } from "./Database/model/taskSchema.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 app.use(cors({
@@ -20,17 +22,18 @@ app.use(cookieParser())
 
 
 
-const saltRounds = 10;
+const saltRounds = 10
 
-
+const usrname = process.env.USERNAMEs;
+const password=process.env.PASSWORD
 
 async function dbConnection() {
   return mongoose.connect(
-    "mongodb+srv://ava604218:Sudhirkr@cluster0.hfdq0or.mongodb.net/workflo?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://"+usrname+":"+password+"@cluster0.hfdq0or.mongodb.net/workflo?retryWrites=true&w=majority&appName=Cluster0"
   );
 }
 
-const secretkey = "sudhirKr";
+const secretkey = process.env.SECRETKEY;
 
 
 app.post("/signup", async (req, res) => {
