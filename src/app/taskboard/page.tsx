@@ -30,6 +30,8 @@ import {
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getAllTask } from "@/lib/features/allTask/Task";
 import { RootState } from "@/lib/store";
+import { useState, useEffect } from "react";
+import { Suspense } from "react";
 
 
 
@@ -37,9 +39,13 @@ import { RootState } from "@/lib/store";
 const Taskboard: React.FC = () => {
   // const [date, setDate] = React.useState<Date>()
   const searchParams = useSearchParams();
-  const data = searchParams.get('data')
-
   const Router = useRouter()
+
+  let data
+  useEffect(() => {
+    data = searchParams.get('data');
+
+  }, [searchParams]);
 
   const dispatch = useAppDispatch()
 
@@ -111,7 +117,10 @@ const Taskboard: React.FC = () => {
           </div>
           <div className=" w-[75%]">
 
-            <p>{data}</p>
+            <Suspense fallback={<div>Loading...</div>}>
+              <p>{data}</p>
+
+            </Suspense>
 
           </div>
 
