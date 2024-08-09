@@ -91,7 +91,8 @@ app.post("/login", async (req, res) => {
 
 app.post("/taskData", async (req, res) => {
   const title = req.body.title;
-  const status = req.body.status.data;
+  const status = req.body.status;
+  console.log("this is status", status)
   const priority = req.body.priority;
   const deadline = req.body.deadline;
   const description = req.body.description
@@ -104,10 +105,10 @@ app.post("/taskData", async (req, res) => {
     console.log("mongodb is successfully connected")
    
     const cookieToken = req.cookies.email
-    // console.log("this is cookie from client",cookieToken )
+    console.log("this is cookie from taskData",cookieToken )
 
     const results = jwt.verify(cookieToken, secretkey);
-    // console.log("jwt verify result",results)
+    console.log("jwt verify result",results)
 
     console.log("user id", results.userEmail)
     
@@ -121,13 +122,23 @@ app.post("/taskData", async (req, res) => {
       userEmail: results.userEmail
     });
     // console.log("task data fetched successfully", result);
-    const userIdFromCookie = results.user_id; // Assuming this is how you get the user ID
+    const userIdFromCookie = results.user_id;
 
+  } catch (error) {
+    console.log("error in getting task data", error);
+  }
+});
 
-    // const taskResult = Task.find({ user_id: userIdFromCookie });
+app.get("/getAllTask", async(req, res) => {
+  try {
+    await dbConnection();
+    const cookieToken = req.cookies.email
+    console.log("this is cookie from getAllTask",cookieToken )
 
-    // console.log("this is taskResult", taskResult)
+    const results = jwt.verify(cookieToken, secretkey);
+    // console.log("jwt verify result",results)
 
+    console.log("user email", results.userEmail)
     Task.aggregate([
       {
         $match: {
@@ -137,17 +148,28 @@ app.post("/taskData", async (req, res) => {
       {
         $lookup: {
           from: "users",
-          localField: "user_id",
-          foreignField: "_id",
+          localField: "userEmail",
+          foreignField: "email",
           as: "user"
         }
       }
     ]).exec().then((result) =>res.json(result)).catch((error)=>console.log("error in getting task",error));
-
   } catch (error) {
-    console.log("error in getting task data", error);
+    console.log("error in fetching data", error)
   }
-});
+
+})
+
+app.delete("/:id", async(req, res) => {
+  const { id } = req.params
+  console.log("this is deleting id", id)
+  try {
+    await Task.findByIdAndDelete(id)
+    console.log("successfully delete")
+  } catch (error) {
+    console.log("error in deleting in backend", error)
+ }
+})
 
 const port = process.env.port || 5000;
 

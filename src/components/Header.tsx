@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -10,10 +10,30 @@ import {
 import Image from "next/image"
 import { AspectRatio } from '@radix-ui/react-aspect-ratio'
 
+
 function Header() {
+  const [greet, setGreet] = useState<String>('')
+
+  useEffect(() => {
+    const date = new Date()
+    const hours = date.getHours()
+    console.log("this is date", hours)
+    let update
+    if (hours === 12 || hours === 24) {
+      update
+    }
+    if (hours > 11.59 && hours < 17.59) {
+      setGreet("Good Afternoon")
+    } else if (hours > 17.59 && hours < 23.59) {
+      setGreet("Good Evening")
+    } else {
+      setGreet("Good Morning")
+    }
+  }, [])
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mt-4">Good Morning, Joe!</h1>
+      <h1 className="text-3xl font-bold mt-4">{greet}, Joe!</h1>
       <div className="flex flex-row justify-between mt-3 gap-2">
         <div className="flex flex-1 justify-between mt-6 bg-green-500">
 
