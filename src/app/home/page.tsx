@@ -16,9 +16,11 @@ function Page() {
 
 
   const router = useRouter();
-  const pathname = usePathname()
-
+  // const pathname = usePathname(
   const dispatch = useAppDispatch()
+
+
+
   useEffect(() => {
 
     async function toDo() {
@@ -38,7 +40,7 @@ function Page() {
 
     toDo()
 
-  }, [pathname])
+  }, [])
   useEffect(() => {
 
     const token = Cookies.get('email');
